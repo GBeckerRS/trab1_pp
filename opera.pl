@@ -112,6 +112,21 @@ fib(1, 1).
 fib(X, Y):-
         X > 1, X1 is X - 1, X2 is X - 2, fib(X1, Z), fib(X2, W), Y is W + Z.
 
+/* 2.6 Valores entre N =< X =< N1 em ordem decrescente */
+entreInvertido :- 
+		write('Digite um valor: '), nl,
+        read(X),
+		write('digite o segundo valor: '), nl,
+        read(Y),
+		(X > Y -> inverte(X,Y); inverte(Y,X)).
+
+inverte(MENOR,MENOR) :- writef('%w',[MENOR]).
+inverte(MAIOR,MENOR) :-
+		R is MAIOR - 1,
+		writef('%w',[MAIOR]),
+		inverte(R,MENOR).
+		
+		
 /* 2.7 MDC */
 mdc :- 
         write('Cálculo do mdc, digite um valor: '), nl,
@@ -142,6 +157,20 @@ mmc :-
       Mmc1 is (A*B)/C,
       writef('%w%w%w%w%w%w',['O mmc dos valores ', A, ' e ', B, ' é ',Mmc1]).
 
+/* 2.9 Numero Primo */
+primo :-
+      write('Digite um valor: '), nl,
+	  read(N),
+	  (nrprimo(N) -> writef('%w%w%w',['O número ', N, ' é primo ']);writef('%w%w%w',['O número ', N, ' não é primo ']) ).
+
+nrprimo(N) :- integer(N), N mod 2 =\= 0, N mod 3 =\= 0, verificacao(N,4).
+verificacao(N,N).
+verificacao(N,IND) :- 
+	IND < N,
+	N mod IND =\= 0,
+	IND2 is IND + 1,
+	verificacao(N, IND2).
+.
 /*Operações com listas */
 
 /*3.1 X é elemento da lista */
@@ -180,6 +209,15 @@ prod([X|Y],P):-
         prod(Y,Q),
         P is Q * X.
  
+ /*3.3 Múltiplos de dois */
+ multdois :- 
+		write('Digite uma lista (entre [ , ]): '), nl,
+        read(N),
+		
+		writef('%w%w%w%w',['Os valores múltiplos de 2 da lista ', N, ' são ',N2]).
+ 
+
+ 
 /* 3.4 Verifica o tamanho da lista */
  tam :- 
         write('Digite uma lista (entre [ , ]): '), nl,
@@ -192,7 +230,15 @@ tamanho([_|R], N):-             %  uma lista não-vazia é obtido acrescentando-
         tamanho(R, N1),         %  unidade ao tamanho de seu corpo.
         N is N1 + 1.
   
- 
+/* 3.5 Média dos elementos da lista */
+med :-
+		write('Digite uma lista (entre [ , ]): '), nl,
+        read(N),
+		somalista(N,S),
+		tamanho(N,T),
+		M is S/T,
+		writef('%w%w%w%w',['A média dos elementos da lista ', N, ' é ', M]).
+
 /*3.6 Concatenação de duas listas*/
 conc :- 
         write('Digite uma lista (entre [ , ]): '), nl,
@@ -202,9 +248,9 @@ conc :-
         concat(N,M,S),
         writef('%w%w%w%w%w%w',['A concatenação da lista ', N, ' e da lista ', M, ' é ', S]).
 
-concat([], L, L).       
+concat([], L, L).
 concat([X | L1], L2, [X | L3]):-
-        concat(L1, L2, L3).   
+        concat(L1, L2, L3).
 
 /*3.8. Enesimo elemento da lista */
 enes:-
@@ -248,7 +294,7 @@ menu :-
                 write('      :...  Programa em Prolog -+- Menu de Operações  ...:    '),nl,
                 write('-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x'),nl,nl,
                 write('Digite a opção escolhida (opção com * já está implementada):   '), nl,
-                write('1: Operações básicas\n \t 1.1 Soma e subtração (*)\t 1.2 Multiplicação e Divisão (*)\t\t 1.3 Potenciação (*)\n \t 1.4 Raiz Quadrada (*)\t\t 1.5 Resto da Divisão (*)\n2: Operações com expressões\n \t 2.1 Número par ou ímpar (*)\t\t 2.2 Quadrado e Cubo (*)\n\t 2.3 Soma n valores inteiros (*)\t\t 2.4 Fatorial (*)\n\t 2.5 Fibonacci (*)\t\t\t 2.6 Valores entre N =< X =< N1 em ordem decrescente\n\t 2.7 MDC (*)\t\t\t\t 2.8 MMC (*)\n\t 2.9 Número primo\n3: Operações com listas\n \t 3.1 X é um elemento na lista (*) \t 3.2 Soma e Produto dos elementos (*) \n\t 3.3 Múltiplos de 2 \t\t\t 3.4 Tamanho da lista (*)\n\t 3.5 Média dos elementos da lista\t 3.6 Concatenação de listas (*) \n\t 3.7 Divisíveis por 5\t\t\t 3.8 Enesimo elemento da lista (*)\n \t 3.9 Menor e Maior valor digitado (*) \t 3.10 Posicao do maior elemento da lista \n\t 3.11 Palindrome \t\t\t 3.12 Soma Pares \n\t 3.13 Multiplica numeros primos \n0: Para sair do programa '),nl,
+                write('1: Operações básicas\n \t 1.1 Soma e subtração (*)\t 1.2 Multiplicação e Divisão (*)\t\t 1.3 Potenciação (*)\n \t 1.4 Raiz Quadrada (*)\t\t 1.5 Resto da Divisão (*)\n2: Operações com expressões\n \t 2.1 Número par ou ímpar (*)\t\t 2.2 Quadrado e Cubo (*)\n\t 2.3 Soma n valores inteiros (*)\t\t 2.4 Fatorial (*)\n\t 2.5 Fibonacci (*)\t\t\t 2.6 Valores entre N =< X =< N1 em ordem decrescente (*)\n\t 2.7 MDC (*)\t\t\t\t 2.8 MMC (*)\n\t 2.9 Número primo (*)\n3: Operações com listas\n \t 3.1 X é um elemento na lista (*) \t 3.2 Soma e Produto dos elementos (*) \n\t 3.3 Múltiplos de 2 \t\t\t 3.4 Tamanho da lista (*)\n\t 3.5 Média dos elementos da lista (*)\t 3.6 Concatenação de listas (*) \n\t 3.7 Divisíveis por 5\t\t\t 3.8 Enesimo elemento da lista (*)\n \t 3.9 Menor e Maior valor digitado (*) \t 3.10 Posicao do maior elemento da lista \n\t 3.11 Palindrome \t\t\t 3.12 Soma Pares \n\t 3.13 Multiplica numeros primos \n0: Para sair do programa '),nl,
                 write('Opcao: '),
                 read(X),
                 X >= 0,

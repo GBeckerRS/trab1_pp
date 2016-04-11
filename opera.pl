@@ -118,6 +118,7 @@ entreInvertido :-
         read(X),
 		write('digite o segundo valor: '), nl,
         read(Y),
+		writef('%w%w%w%w%w',['Os valores descrescentes de ', X, ' a ', Y, ' são: ']), 
 		(X > Y -> inverte(X,Y); inverte(Y,X)).
 
 inverte(MENOR,MENOR) :- writef('%w',[MENOR]).
@@ -163,6 +164,8 @@ primo :-
 	  read(N),
 	  (nrprimo(N) -> writef('%w%w%w',['O número ', N, ' é primo ']);writef('%w%w%w',['O número ', N, ' não é primo ']) ).
 
+nrprimo(2).
+nrprimo(3).
 nrprimo(N) :- integer(N), N mod 2 =\= 0, N mod 3 =\= 0, verificacao(N,4).
 verificacao(N,N).
 verificacao(N,IND) :- 
@@ -213,10 +216,12 @@ prod([X|Y],P):-
  multdois :- 
 		write('Digite uma lista (entre [ , ]): '), nl,
         read(N),
-		
-		writef('%w%w%w%w',['Os valores múltiplos de 2 da lista ', N, ' são ',N2]).
+		writef('%w%w%w',['Os valores múltiplos de 2 da lista ', N, ' são ']),
+		multiplo(N).
  
-
+multiplo([ ]).
+multiplo([H1|R1]):-
+	(H1 mod 2 =:= 0 -> writef('%w%w',[H1, ' ']), multiplo(R1); multiplo(R1)).
  
 /* 3.4 Verifica o tamanho da lista */
  tam :- 
@@ -251,7 +256,19 @@ conc :-
 concat([], L, L).
 concat([X | L1], L2, [X | L3]):-
         concat(L1, L2, L3).
-
+		
+/* 3.7 Divisíveis por 5 */
+dev5:- 
+		write('Digite uma lista (entre [ , ]): '), nl,
+        read(N),
+		write('Os elementos divisíveis por 5 são: '), 
+		divisivelporcinco(N).
+		
+divisivelporcinco([]).
+divisivelporcinco([L|R]):- 
+		divisivelporcinco(R),
+		(L mod 5 =:= 0 -> writef('%w%w',[L, ' ']); write('')).
+		
 /*3.8. Enesimo elemento da lista */
 enes:-
         write('Digite uma lista (entre [ , ]): '), nl,
@@ -285,6 +302,52 @@ max([X|Y],M):-                     %  Notar a semelhança com o predicado min/2,
         max(Y,N),                  %  seguir, e o emprego da construção "if then else"
         (X>N -> M=X; M=N).         %  dada por (A -> B ; C).
 
+/* 4.1 Posição do menor elemento da lista */
+posicmenor :-
+		write('Digite uma lista (entre [ , ]): '), nl,
+        read(N),
+		min(N,E),
+		enesimo(I,E,N),
+		writef('%w%w%w%w',['A posição do menor valor da lista ', N, ' é ',I]).
+		
+/* 4.2 Palíndrome */
+palindrome :- 
+		write('Digite uma lista (entre [ , ]): '), nl,
+        read(N),
+		reverso(N,N2),
+		(N == N2 -> writef('%w%w%w',['A palavra ', N, ' é palíndrome ']);
+			writef('%w%w%w',['A palavra ', N, ' não é palíndrome '])).
+			
+reverso(L1,L2) :- 
+	reversolista(L1,[],L2).
+	
+reversolista([],L,L).
+reversolista([C|R],F,L3) :- 
+	reversolista(R,[C|F],L3).
+
+/* 4.3 Soma pares */
+somapar :- 
+		write('Digite uma lista (entre [ , ]): '), nl,
+        read(L),
+		somapares(L,S),
+		writef('%w%w%w%w',['A soma dos pares da lista ', L, ' resultou em ', S]).
+somapares([],0).
+somapares([C|R],S) :- 
+		somapares(R,S1),
+		(C mod 2 =:= 0 -> S is C + S1; S is S1 + 0).
+		
+/* 4.4 Multiplica primos */
+multprimo :- 
+		write('Digite uma lista (entre [ , ]): '), nl,
+        read(L),
+		multiplicaprimos(L,M),
+		writef('%w%w%w%w',['A multiplicação dos números primos da lista ', L, ' resultou em ', M]).
+
+multiplicaprimos([],1).
+multiplicaprimos([C|R],M) :-
+		multiplicaprimos(R,M1),
+		(nrprimo(C) -> M is C * M1; M is M1 * 1).
+
 /*
 Especificação do Menu principal!
 */
@@ -294,7 +357,7 @@ menu :-
                 write('      :...  Programa em Prolog -+- Menu de Operações  ...:    '),nl,
                 write('-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x'),nl,nl,
                 write('Digite a opção escolhida (opção com * já está implementada):   '), nl,
-                write('1: Operações básicas\n \t 1.1 Soma e subtração (*)\t 1.2 Multiplicação e Divisão (*)\t\t 1.3 Potenciação (*)\n \t 1.4 Raiz Quadrada (*)\t\t 1.5 Resto da Divisão (*)\n2: Operações com expressões\n \t 2.1 Número par ou ímpar (*)\t\t 2.2 Quadrado e Cubo (*)\n\t 2.3 Soma n valores inteiros (*)\t\t 2.4 Fatorial (*)\n\t 2.5 Fibonacci (*)\t\t\t 2.6 Valores entre N =< X =< N1 em ordem decrescente (*)\n\t 2.7 MDC (*)\t\t\t\t 2.8 MMC (*)\n\t 2.9 Número primo (*)\n3: Operações com listas\n \t 3.1 X é um elemento na lista (*) \t 3.2 Soma e Produto dos elementos (*) \n\t 3.3 Múltiplos de 2 \t\t\t 3.4 Tamanho da lista (*)\n\t 3.5 Média dos elementos da lista (*)\t 3.6 Concatenação de listas (*) \n\t 3.7 Divisíveis por 5\t\t\t 3.8 Enesimo elemento da lista (*)\n \t 3.9 Menor e Maior valor digitado (*) \t 3.10 Posicao do maior elemento da lista \n\t 3.11 Palindrome \t\t\t 3.12 Soma Pares \n\t 3.13 Multiplica numeros primos \n0: Para sair do programa '),nl,
+                write('1: Operações básicas\n \t 1.1 Soma e subtração (*)\t 1.2 Multiplicação e Divisão (*)\t\t 1.3 Potenciação (*)\n \t 1.4 Raiz Quadrada (*)\t\t 1.5 Resto da Divisão (*)\n2: Operações com expressões\n \t 2.1 Número par ou ímpar (*)\t\t 2.2 Quadrado e Cubo (*)\n\t 2.3 Soma n valores inteiros (*)\t\t 2.4 Fatorial (*)\n\t 2.5 Fibonacci (*)\t\t\t 2.6 Valores entre N =< X =< N1 em ordem decrescente (*)\n\t 2.7 MDC (*)\t\t\t\t 2.8 MMC (*)\n\t 2.9 Número primo (*)\n3: Operações com listas\n \t 3.1 X é um elemento na lista (*) \t 3.2 Soma e Produto dos elementos (*) \n\t 3.3 Múltiplos de 2 (*) \t\t\t 3.4 Tamanho da lista (*)\n\t 3.5 Média dos elementos da lista (*)\t 3.6 Concatenação de listas (*) \n\t 3.7 Divisíveis por 5 (*)\t\t\t 3.8 Enesimo elemento da lista (*)\n \t 3.9 Menor e Maior valor digitado (*) \t 4.1 Posicao do menor elemento da lista (*) \n\t 4.2 Palindrome (*) \t\t\t 4.3 Soma Pares (*) \n\t 4.4 Multiplica numeros primos (*) \n0: Para sair do programa '),nl,
                 write('Opcao: '),
                 read(X),
                 X >= 0,
@@ -329,8 +392,8 @@ operacao(3.6) :- conc.
 operacao(3.7) :- dev5.
 operacao(3.8) :- enes.
 operacao(3.9) :- menormaior.
-operacao(3.10) :- posicmenor.
-operacao(3.11) :- palindrome.
-operacao(3.12) :- somapar.
-operacao(3.13) :- multprimo.
+operacao(4.1) :- posicmenor.
+operacao(4.2) :- palindrome.
+operacao(4.3) :- somapar.
+operacao(4.4) :- multprimo.
 

@@ -397,3 +397,5 @@ operacao(4.2) :- palindrome.
 operacao(4.3) :- somapar.
 operacao(4.4) :- multprimo.
 
+
+/*gfgfgfgfgfg
